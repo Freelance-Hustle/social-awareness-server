@@ -1,0 +1,14 @@
+{
+	"name": "social-awareness-server",
+	"version": "1.0.0",
+	"main": "server.js",
+	"repository": "https://github.com/Freelance-Hustle/social-awareness-server.git",
+	"author": "wazimuhb <hesbonosoro1@gmail.com>",
+	"license": "MIT",
+	"scripts": {
+		"format": "prettier --write ."
+	},
+	"devDependencies": {
+		"prettier": "^2.5.1"
+	}
+}
