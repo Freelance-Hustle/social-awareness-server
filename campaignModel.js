@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
 const campaignModel = mongoose.Schema({
-	caption: String,
-	user: String,
-	image: String,
+	title: {type: String},
+	content: {type: String},
+	user: {type: mongoose.Types.ObjectId, ref: 'User', required: true},
 });
 
 export default mongoose.model('campaign', campaignModel);
