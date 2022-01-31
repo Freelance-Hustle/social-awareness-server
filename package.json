@@ -2,13 +2,20 @@
 	"name": "social-awareness-server",
 	"version": "1.0.0",
 	"main": "server.js",
-	"repository": "https://github.com/Freelance-Hustle/social-awareness-server.git",
-	"author": "wazimuhb <hesbonosoro1@gmail.com>",
 	"license": "MIT",
 	"scripts": {
+		"start": "node index",
+		"serve": "node index",
 		"format": "prettier --write ."
 	},
 	"devDependencies": {
 		"prettier": "^2.5.1"
+	},
+	"type": "module",
+	"dependencies": {
+		"body-parser": "^1.19.1",
+		"cors": "^2.8.5",
+		"express": "^4.17.2",
+		"mongoose": "^6.1.8"
 	}
 }
