@@ -13,25 +13,36 @@ export const checkRequest = (
   next: NextFunction,
   checkFields: string[]
 ) => {
-  let error = '';
+  try{
+    let error = '';
 
-  checkFields.map((field: string, fieldIndex: number) => {
-    if (!req.body || !req.body[field] || req.body[field].length <= 0) {
-      error += `${field} cannot be empty${
-        checkFields.length - 1 !== fieldIndex ? ' \n ' : ''
-      }`;
-    }
-  });
-
-  if (error) {
-    return res.status(400).json({
-      status: 400,
-      success: false,
-      message: error,
+    checkFields.map((field: string, fieldIndex: number) => {
+      if (!req.body || !req.body[field] || req.body[field].length <= 0) {
+        error += `${field} cannot be empty${
+          checkFields.length - 1 !== fieldIndex ? ' \n ' : ''
+        }`;
+      }
     });
-  } else {
-    next();
+  
+    if (error) {
+      return res.status(200).json({
+        status: 400,
+        success: false,
+        message: error,
+      });
+    } else {
+      next();
+    }
+
+  }catch(err: unknown){
+    return res.status(200).json({
+      status: 500,
+      success: false,
+      //@ts-ignore
+      message: err.message,
+    });
   }
+ 
 };
 
 export const validateEmail = (email): boolean => {

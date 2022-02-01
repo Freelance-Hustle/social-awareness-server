@@ -1,20 +1,20 @@
-import mongoose = require('mongoose');
+import mongooze = require('mongoose');
 
 export interface IPost {
   title?: string;
   content: string;
-  user: mongoose.Types.ObjectId;
+  user: mongooze.Types.ObjectId;
   isApproved: boolean;
 }
 
-const postSchema: mongoose.Schema = new mongoose.Schema(
+const postSchema: mongooze.Schema = new mongooze.Schema(
   {
     title: { type: String },
     content: { type: String },
-    user: { type: mongoose.Types.ObjectId, ref: 'User', required: true },
+    user: { type: mongooze.Types.ObjectId, ref: 'User', required: true },
     isApproved: { type: Boolean, required: true, default: false },
   },
   { collection: 'posts', timestamps: true }
 );
 
-export default mongoose.model<IPost>('Post', postSchema);
+export default mongooze.model<IPost>('Post', postSchema);

@@ -1,4 +1,5 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwtt = require('jsonwebtoken');
+import {JwtPayload} from "jsonwebtoken"
 import { Request, Response, NextFunction } from 'express';
 import { APIResponseProps, AuthorizationPayloadProps } from '../types';
 require('dotenv').config();
@@ -28,7 +29,7 @@ const authorization = async (
         message: 'Error: Not authorized',
       });
     } else {
-      await jwt.verify(
+      await jwtt.verify(
         token,
         process.env.JWT_SECRET ?? '',
         (err: any, verified?: JwtPayload | string) => {
@@ -60,10 +61,11 @@ const authorization = async (
         }
       );
     }
-  } catch (err: any) {
+  } catch (err: unknown) {
     return res.status(200).json({
       status: 500,
       success: false,
+      //@ts-ignore
       message: `Error: ${err.message}`,
     });
   }
