@@ -14,10 +14,13 @@ export module PostModule {
 		'/',
 		authorization,
 		(req, res, next) =>
-			utill.checkRequest(req, res, next, ['content', 'user', 'title']),
+			utill.checkRequest(req, res, next, ['content', 'title']),
 		async (req: Request, res: Response<APIResponseProps<IPost>>) => {
 			try {
-				const post: IPost = await Post.create(req.body);
+				//@ts-ignore
+				const user = req.user_info.user;
+
+				const post: IPost = await Post.create({ ...req.body, user });
 
 				return res.status(200).json({
 					status: 200,
