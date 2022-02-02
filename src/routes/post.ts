@@ -48,7 +48,7 @@ export module PostModule {
 				const { is_admin } = req.user_info;
 
 				if (is_admin) {
-					const posts: IPost[] = await Post.find();
+					const posts: IPost[] = await Post.find().sort({createdAt: -1});
 
 					return res.status(200).json({
 						status: 200,
