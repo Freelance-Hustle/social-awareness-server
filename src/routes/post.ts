@@ -1,176 +1,175 @@
-import expres = require('express');
 import { Request, Response, NextFunction } from 'express';
-import authorization from '../middlewares/authorization';
-import Post, { IPost } from '../models/Post';
+import { Authorization } from '../middlewares/authorization';
+import { IPost } from '../models/Post';
 import utill = require('../utils');
 import { APIResponseProps } from '../types';
 
-const postRouter = expres.Router();
+export module Post {
+	const express = require('express');
+	const Post = require('../models/Post');
+	const authorization = Authorization.authorization;
 
-postRouter.post(
-  '/',
-  authorization,
-  (req, res, next) =>
-    utill.checkRequest(req, res, next, ['content', 'user', 'title']),
-  async (req: Request, res: Response<APIResponseProps<IPost>>) => {
-    try {
-      const post: IPost = await Post.create(req.body);
+	export const postRouter = express.Router();
 
-      return res.status(200).json({
-        status: 200,
-        success: true,
-        message: 'Post created succesfully!',
-        data: post,
-      });
-      
-    } catch (err: unknown) {
-      return res.status(200).json({
-        status: 500,
-        success: false,
-         //@ts-ignore
-        message: err.message,
-      });
-    }
-  }
-);
+	postRouter.post(
+		'/',
+		authorization,
+		(req, res, next) =>
+			utill.checkRequest(req, res, next, ['content', 'user', 'title']),
+		async (req: Request, res: Response<APIResponseProps<IPost>>) => {
+			try {
+				const post: IPost = await Post.create(req.body);
 
-postRouter.get(
-  '/',
-  authorization,
-  async (req: Request, res: Response<APIResponseProps<IPost[]>>) => {
-    try {
-      //@ts-ignore
-      const { is_admin } = req.user_info;
+				return res.status(200).json({
+					status: 200,
+					success: true,
+					message: 'Post created succesfully!',
+					data: post,
+				});
+			} catch (err: unknown) {
+				return res.status(200).json({
+					status: 500,
+					success: false,
+					//@ts-ignore
+					message: err.message,
+				});
+			}
+		}
+	);
 
-      if (is_admin) {
-        const posts: IPost[] = await Post.find();
+	postRouter.get(
+		'/',
+		authorization,
+		async (req: Request, res: Response<APIResponseProps<IPost[]>>) => {
+			try {
+				//@ts-ignore
+				const { is_admin } = req.user_info;
 
-        return res.status(200).json({
-          status: 200,
-          success: true,
-          message: 'Posts fetched succesfully!',
-          data: posts,
-        });
-      }
+				if (is_admin) {
+					const posts: IPost[] = await Post.find();
 
-      const posts = await Post.find();
+					return res.status(200).json({
+						status: 200,
+						success: true,
+						message: 'Posts fetched succesfully!',
+						data: posts,
+					});
+				}
 
-      return res.status(200).json({
-        status: 200,
-        success: true,
-        message: 'Posts fetched succesfully!',
-        data: posts,
-      });
-      
-    } catch (err: unknown) {
-      return res.status(200).json({
-        status: 500,
-        success: false,
-         //@ts-ignore
-        message: err.message,
-      });
-    }
-  }
-);
+				const posts = await Post.find();
 
-postRouter.delete(
-  '/:id',
-  authorization,
-  async (req: Request, res: Response<APIResponseProps>) => {
-    try {
-      const { id } = req.params;
-      //@ts-ignore
-      const { user, is_admin } = req.user_info;
+				return res.status(200).json({
+					status: 200,
+					success: true,
+					message: 'Posts fetched succesfully!',
+					data: posts,
+				});
+			} catch (err: unknown) {
+				return res.status(200).json({
+					status: 500,
+					success: false,
+					//@ts-ignore
+					message: err.message,
+				});
+			}
+		}
+	);
 
-      let deletedPost: IPost | null;
+	postRouter.delete(
+		'/:id',
+		authorization,
+		async (req: Request, res: Response<APIResponseProps>) => {
+			try {
+				const { id } = req.params;
+				//@ts-ignore
+				const { user, is_admin } = req.user_info;
 
-      if (is_admin) {
-        deletedPost = await Post.findByIdAndDelete(id);
-      } else {
-        deletedPost = await Post.findOneAndDelete({ _id: id, user });
-      }
+				let deletedPost: IPost | null;
 
-      if (!deletedPost) {
-        return res.status(200).json({
-          status: 400,
-          success: false,
-          message: 'Error: Something went wrong!',
-        });
-      }
+				if (is_admin) {
+					deletedPost = await Post.findByIdAndDelete(id);
+				} else {
+					deletedPost = await Post.findOneAndDelete({ _id: id, user });
+				}
 
-      return res.status(200).json({
-        status: 200,
-        success: true,
-        message: 'Post deleted succeffully!',
-      });
-    
-    } catch (err: unknown) {
-      return res.status(200).json({
-        status: 500,
-        success: false,
-         //@ts-ignore
-        message: err.message,
-      });
-    }
-  }
-);
+				if (!deletedPost) {
+					return res.status(200).json({
+						status: 400,
+						success: false,
+						message: 'Error: Something went wrong!',
+					});
+				}
 
-postRouter.patch(
-  '/:id',
-  authorization,
-  async (
-    req: Request,
-    res: Response<APIResponseProps<IPost>>,
-    next: NextFunction
-  ) => {
-    try {
-      await utill.checkRequest(req, res, next, ['content', 'title']);
+				return res.status(200).json({
+					status: 200,
+					success: true,
+					message: 'Post deleted succeffully!',
+				});
+			} catch (err: unknown) {
+				return res.status(200).json({
+					status: 500,
+					success: false,
+					//@ts-ignore
+					message: err.message,
+				});
+			}
+		}
+	);
 
-      const id = req.params.id;
-      //@ts-ignore
-      const { user } = req.user_info;
-      const { content, title } = req.body;
+	postRouter.patch(
+		'/:id',
+		authorization,
+		async (
+			req: Request,
+			res: Response<APIResponseProps<IPost>>,
+			next: NextFunction
+		) => {
+			try {
+				await utill.checkRequest(req, res, next, ['content', 'title']);
 
-      const post: IPost | null = await Post.findById(id);
+				const id = req.params.id;
+				//@ts-ignore
+				const { user } = req.user_info;
+				const { content, title } = req.body;
 
-      if (!post) {
-        return res.status(200).json({
-          status: 404,
-          success: false,
-          message: `Error: Post not found!`,
-        });
-      }
+				const post: IPost | null = await Post.findById(id);
 
-      const updatePost: IPost | null = await Post.findOneAndUpdate(
-        { id, user },
-        { content, title },
-        { new: true }
-      );
+				if (!post) {
+					return res.status(200).json({
+						status: 404,
+						success: false,
+						message: `Error: Post not found!`,
+					});
+				}
 
-      if (!updatePost) {
-        return res.status(200).json({
-          status: 400,
-          success: false,
-          message: `Error: Something went wrong!`,
-        });
-      }
+				const updatePost: IPost | null = await Post.findOneAndUpdate(
+					{ id, user },
+					{ content, title },
+					{ new: true }
+				);
 
-      return res.status(200).json({
-        status: 200,
-        success: true,
-        message: `Post updated succeffully!`,
-        data: updatePost,
-      });
-     
-    } catch (err: unknown) {
-      return res.status(200).json({
-        status: 500,
-        success: false,
-         //@ts-ignore
-        message: err.message,
-      });
-    }
-  }
-);
+				if (!updatePost) {
+					return res.status(200).json({
+						status: 400,
+						success: false,
+						message: `Error: Something went wrong!`,
+					});
+				}
 
-export { postRouter };
+				return res.status(200).json({
+					status: 200,
+					success: true,
+					message: `Post updated succeffully!`,
+					data: updatePost,
+				});
+			} catch (err: unknown) {
+				return res.status(200).json({
+					status: 500,
+					success: false,
+					//@ts-ignore
+					message: err.message,
+				});
+			}
+		}
+	);
+}
