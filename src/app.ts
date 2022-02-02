@@ -1,7 +1,7 @@
 'use strict';
 import { Request, Response } from 'express';
-import { Post } from './routes/post';
-import { User } from './routes/user';
+import { PostModule as Post } from './routes/post';
+import { UserModule as User } from './routes/user';
 
 export module App {
 	const express = require('express');

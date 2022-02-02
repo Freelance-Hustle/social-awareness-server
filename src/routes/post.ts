@@ -1,12 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { Authorization } from '../middlewares/authorization';
-import { IPost } from '../models/Post';
+import Post, { IPost } from '../models/Post';
 import utill = require('../utils');
 import { APIResponseProps } from '../types';
 
-export module Post {
+export module PostModule {
 	const express = require('express');
-	const Post = require('../models/Post');
 	const authorization = Authorization.authorization;
 
 	export const postRouter = express.Router();

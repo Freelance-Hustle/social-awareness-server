@@ -1,13 +1,12 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import { APIResponseProps, UserLoginProps } from '../types';
-import { IUser } from '../models/User';
+import User, { IUser } from '../models/User';
 import { Tokenify } from '../utils/tokenify';
-export module User {
+export module UserModule {
 	const express = require('express');
 	const tokenify = Tokenify.tokenify;
 	const util = require('../utils');
-	const User = require('../models/User');
 
 	export const userRouter = express.Router();
 
